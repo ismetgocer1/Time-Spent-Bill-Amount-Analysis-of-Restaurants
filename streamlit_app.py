@@ -2,12 +2,8 @@ import streamlit as st
 import pandas as pd
 import pickle
 from tensorflow.keras.models import load_model
-from joblib import load
 
 st.header("Restoran Fatura Tahmin Uygulaması")
-
-# Model ve ölçeklendirici dosyalarını yükleme
-#dt_model = load('final_DT_model.joblib')
 
 dt_model = pickle.load(open('final_DT_model.pkl', "rb"))
 xgb_model = pickle.load(open('final_XGB_model.pkl', 'rb')) 
