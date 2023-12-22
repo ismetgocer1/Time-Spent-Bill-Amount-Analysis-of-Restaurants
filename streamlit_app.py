@@ -2,28 +2,34 @@ import streamlit as st
 import pandas as pd
 import pickle
 from tensorflow.keras.models import load_model
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.tree import DecisionTreeRegressor
+from xgboost import XGBRegressor
 
-st.header("Restoran Fatura Tahmin Uygulaması")
+# Resmi belirli bir genişlikle resim gösterme
+st.image('TimeSpend.png', caption='Time Spending of Customers in a Restautrant', width=500)
+
+st.header("Restaurant Bill Estimator")
 
 dt_model = pickle.load(open('final_DT_model.pkl', "rb"))
 xgb_model = pickle.load(open('final_XGB_model.pkl', 'rb')) 
 ann_model = load_model('final_ANN_model.h5')
 scaler = pickle.load(open('final_scaler_saved.pkl', "rb"))
 
-st.sidebar.title("Lütfen faturayla ilgili detayları giriniz.")
+st.sidebar.title("Please enter details about the bill.")
 
 # Örnek özellik seçimleri
-meal_type = st.sidebar.selectbox("Hangi öğünde yemek yediniz?", ['Kahvaltı', 'Öğle Yemeği', 'Akşam Yemeği'])
-table_location = st.sidebar.selectbox("Masa konumu neresi?", ['Pencere Kenarı', 'Merkez', 'Bahçe'])
-weather_condition = st.sidebar.selectbox("Hava durumu nasıldı?", ['Güneşli', 'Bulutlu', 'Yağmurlu', 'Karlı'])
-day = st.sidebar.selectbox("Haftanın günü nedir?", ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'])
-age_group = st.sidebar.selectbox("Yaş grubunuz nedir?", ['18-25', '26-35', '36-45', '46-55', '56-65', '65+'])
-reservation = st.sidebar.radio("Rezervasyon yaptırdınız mı?", [1, 0])
-live_music =  st.sidebar.radio("Canlı müzik vardı mı?", [1, 0])
-number_of_people = st.sidebar.number_input("Yemekte kaç kişi vardı?", min_value=1, value=1)
-time_spent = st.sidebar.number_input("Restoranda ne kadar zaman geçirdiniz? (dakika)",  min_value=30)
-gender = st.sidebar.radio("Cinsiyetiniz nedir?", ['Kadın', 'Erkek', 'Diğer'])
-customer_satisfaction = st.sidebar.slider('Müşteri Memnuniyeti', 1, 5, 3)
+meal_type = st.sidebar.selectbox("Meal Type", ['Breakfast', 'Lunch', 'Dinner'])
+table_location = st.sidebar.selectbox("Table Location", ['Window', 'Center', 'Patrio'])
+weather_condition = st.sidebar.selectbox("Weather Condition", ['Sunny', 'Cloudy', 'Rainy', 'Snowy'])
+day = st.sidebar.selectbox("Day", ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+age_group = st.sidebar.selectbox("Age Group", ['18-25', '26-35', '36-45', '46-55', '56-65', '65+'])
+reservation = st.sidebar.radio("Reservation", [1, 0])
+live_music =  st.sidebar.radio("Live Music", [1, 0])
+number_of_people = st.sidebar.number_input("Number of People", min_value=1, value=1)
+time_spent = st.sidebar.number_input("Time Spent (minutes)",  min_value=30)
+gender = st.sidebar.radio("Gender", ['Male', 'Female', 'Other'])
+customer_satisfaction = st.sidebar.slider('Customer Satisfaction', 1, 5, 3)
 
 # Kullanıcının girdiği verileri bir sözlük olarak kaydetme
 user_data = {
@@ -43,7 +49,7 @@ user_data = {
 # Kullanıcının girdiği verileri DataFrame'e dönüştürme
 df_user = pd.DataFrame.from_dict([user_data])
 
-st.subheader("Girdiğiniz Detaylar:")
+st.subheader("Entered Information:")
 st.dataframe(df_user)
 
 # Modelinizin beklediği sütunları buraya ekleyin.
@@ -73,8 +79,8 @@ xgb_prediction = xgb_model.predict(df_user_scaled)
 ann_prediction = ann_model.predict(df_user_scaled)
 
 # Tahminleri kullanıcıya gösterme
-st.success("Karar Ağacı Modeli ile Tahmini Fatura Tutarınız: {:.2f} TL".format(int(dt_prediction[0])))
-st.success("XGBoost Modeli ile Tahmini Fatura Tutarınız: {:.2f} TL".format(int(xgb_prediction[0])))
-st.success("Yapay Sinir Ağı Modeli ile Tahmini Fatura Tutarınız: {:.2f} TL".format(int(ann_prediction[0][0])))
+st.success("Estimated Bill Amount with Decision Tree Model: {:.2f} TL".format(int(dt_prediction[0])))
+st.success("Estimated Invoice Amount with XGBoost Model: {:.2f} TL".format(int(xgb_prediction[0])))
+st.success("Estimated Invoice Amount with ANN Model: {:.2f} TL".format(int(ann_prediction[0][0])))
 # Kodun sonu
 
