@@ -8,7 +8,7 @@ st.header("Restoran Fatura Tahmin Uygulaması")
 dt_model = pickle.load(open('final_DT_model.pkl', "rb"))
 xgb_model = pickle.load(open('final_XGB_model.pkl', 'rb')) 
 ann_model = load_model('final_ANN_model.h5')
-scaler = pickle.load(open('final_scaler_saved', "rb"))
+scaler = pickle.load(open('final_scaler_saved.pkl', "rb"))
 
 st.sidebar.title("Lütfen faturayla ilgili detayları giriniz.")
 
