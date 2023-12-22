@@ -1,3 +1,5 @@
 streamlit==1.28.1
 pandas==2.0.3
+sklearn==1.2.2
+xgboost==2.0.2
 tensorflow ==2.15.0
