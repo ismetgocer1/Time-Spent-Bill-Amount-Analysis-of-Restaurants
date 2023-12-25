@@ -79,8 +79,8 @@ xgb_prediction = xgb_model.predict(df_user_scaled)
 ann_prediction = ann_model.predict(df_user_scaled)
 
 # Tahminleri kullanıcıya gösterme
-st.success("Estimated Bill Amount with Decision Tree Model: {:.2f} TL".format(int(dt_prediction[0])))
-st.success("Estimated Invoice Amount with XGBoost Model: {:.2f} TL".format(int(xgb_prediction[0])))
-st.success("Estimated Invoice Amount with ANN Model: {:.2f} TL".format(int(ann_prediction[0][0])))
+st.success("Estimated Bill Amount with Decision Tree Model:   ${:.2f} ".format(int(dt_prediction[0])))
+st.success("Estimated Invoice Amount with XGBoost Model:   ${:.2f}".format(int(xgb_prediction[0])))
+st.success("Estimated Invoice Amount with ANN Model:   ${:.2f}".format(int(ann_prediction[0][0])))
 # Kodun sonu
 
